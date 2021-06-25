@@ -45,12 +45,24 @@ setopt correct
 # Displays the git command in color
 git config --global color.ui auto
 
+# git branch visualizer with colors
+function rprompt-git-current-branch {
+  local branch_name
+  if [ ! -e  ".git" ]; then
+    return
+  fi
+  branch_name=`git rev-parse --abbrev-ref HEAD 2> /dev/null`
+  echo " ($branch_name)"
+}
+
+setopt prompt_subst
+GITPROMPT='`rprompt-git-current-branch`'
 
 # PROMPT setting
 autoload colors
 colors
 
 PROMPT="
-%n%# %{${fg[blue]}%}%~
+%n%# %{${fg[blue]}%}%~$GITPROMPT
 >> %{${reset_color}%}"
 RPROMPT=$'[%D %*]'
